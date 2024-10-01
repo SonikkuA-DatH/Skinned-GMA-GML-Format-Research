@@ -1,0 +1,79 @@
+Hacked skinned mesh notes
+```
+GCMF
+(Location:0x04) Skined mesh mode [0x00000008]
+(Location:0x04-0x0B) Regular header stuff
+(Location:0x0B-0x0D) 0x0000
+(Location:0x0E) matrix count (1 byte)
+(Location:0x10) offset to vertex count (uint32) [relative from GCMF]
+regular header and texture header
+write all bone offset 3x4 matrices
+[If a single matrix ad 16 0's for padding]
+
+vertex count (uint32)
+offset to weights (uint32)
+offset to sub-mesh entries (uint32)
+offset to strips/indices.
+offset to extra weighting info.
+0x00000000
+0x00000000
+0x00000000
+
+Sub Mesh Entry:
+lighting mode (uint8)
+0xFFFFFFFF
+0xFFFFFFFF
+0x00000000
+0x00FF
+0x01
+skinning mode (1 byte) [0x03 for a skinned mesh]
+0xFF00
+0xFFFFFFFF
+0x0000
+texture mode (uint16)
+0xFFFFFFFF
+0xFFFFFFFF
+0x00000000 [total size of entries for non-skinned modes]
+strip total entry size (uint16) [Counted in sizof(uint32), index count * 4 for single triangle entries???]
+bounding sphere (float3)
+0x00000000
+
+Vertex entry:
+0xFFFFFFFF
+0x01000001 (this can change to 0x02000002, 0x03000003, etc)
+0x00000000
+0x00000000
+position (float3)
+normal (float3)
+texcord1 (float2)
+texcord2 (float2)
+texcord3 (float2)
+
+Weight entry:
+same position as vertex (float3)
+same normal as vertex (float3)
+bone 1 (uint16)
+bone 2 (uint16)
+weight (float)
+[If bone 2 doesn't exist and weight value is not 1 the next bone in the chain will be bone 2]
+[Count is equal to the count of Vertex entries or bigger if a strip accesses a vertex more than once. I'm pretty sure.]
+
+Extra Weighting Info:
+0xFF
+0x01 (number of non-weighted vertices???)
+0x00000001 (this never changes)
+0x00000000 (2 uint16)
+0x00000000 (2 uint16)
+0x00000000 (2 uint16)
+0x00000000 (2 uint16)
+0x00000000 (2 uint16)
+0x00000000 (2 uint16)
+[each 2 uint16 are bone indices and probably deals with the 0x01000001, 0x02000002,...]
+[this one is a single entry for the whole GCMF]
+
+Triangle entries (cheating-method):
+number of indices (uint32) [0x00000003 for a single tringle]
+index offset * 64 (uint32)
+index offset * 64 (uint32)
+index offset * 64 (uint32)
+... [loop through all (uint32 number of indices, uint32* offsets)]
