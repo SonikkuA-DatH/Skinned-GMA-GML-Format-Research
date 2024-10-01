@@ -1,0 +1,36 @@
+MTA File Header:
+number of animations (uint32)
+offset to animation names (uint32)
+list of animation locations (uint32 *)
+
+Single MTA Animation Entry:
+total time (ushort)
+001901F8 (header flag like GMA GCMF)
+0000 (padding)
+
+Single Animation Part:
+total amount of keyframes (uint16)
+00000000 0000 (padding)
+
+Single MTA Keyframe: 
+3 entries (float)
+keyframe time (uint32)
+
+Ending Key Frame:
+3 floats (often 0's)
+
+MTA Animation entry Order:
+Single MTA Animation Entry
+total amount of keyframes (uint16)
+Single MTA Keyframe
+Single MTA Keyframe
+...
+Single Animation Part
+Single MTA Keyframe
+Single MTA Keyframe
+...
+
+Note: there must be a key frame at the end with a time value of total time.
+Note: second animation may only be two or three frames for some reason?
+Note: interpolation on the fist animation must have a value.
+Note: ending keyframes sometimes do not have a time.
