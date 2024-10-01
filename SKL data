@@ -1,0 +1,12 @@
+SKL header
+short (bone count)
+00FF00
+
+single skl entry
+bone_id (uint) weight_id?(ushort)
+rotation 1 quaternion ( vector 4 )
+rotation 2 quaternion ( vector 4 )
+position ( vector 3 )
+bone_name
+
+In skl.arc aiai skeleton offset 15CE0
